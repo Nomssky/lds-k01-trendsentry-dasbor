@@ -1,54 +1,95 @@
 <!doctype html><html lang="id"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Dasbor TrendSentry — TK2/TK3</title>
+<title>TrendSentry — Dasbor Keputusan</title>
 <style>
-body{font-family:system-ui,sans-serif;background:#F3EEE4;color:#171614;margin:0;padding:24px}
-.wrap{max-width:1100px;margin:auto}
-h1{font-size:2rem;margin:0 0 4px} h2{font-size:1.1rem;letter-spacing:.1em;text-transform:uppercase;margin:0 0 12px}
-.sub{color:#5E5950;margin-bottom:24px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-bottom:24px}
-.kartu{border:3px solid #171614;background:#fff;box-shadow:6px 6px 0 #171614;padding:14px 16px}
-.besar{font-size:2rem;font-weight:800;color:#1D4C98}
-.buruk{color:#C8361F} .baik{color:#1F7A4A}
-table{border-collapse:collapse;width:100%;font-size:.9rem;background:#fff}
-th{background:#171614;color:#fff;text-align:left;padding:7px 10px}
-td{padding:7px 10px;border-bottom:1px solid #ddd}
-input{width:90px;padding:5px;border:2px solid #171614;font-size:1rem}
-footer{font-size:.85rem;color:#5E5950;margin-top:24px}
-</style></head><body>
-<div class="wrap" data-trades="7" data-rate="0.5327" data-spread="0.1159" data-yatim="25">
-<h1>TrendSentry — Dasbor Keputusan Fase 4</h1>
-<p class="sub">Data 2026-11-25 · 94 hari ekuitas · 7 transaksi tertutup. Dibangun dari <code>trendsentry.db</code>.</p>
-<div class="grid">
-<div class="kartu"><h2>Closed trade</h2><div class="besar ">7</div></div>
-<div class="kartu"><h2>Win rate</h2><div class="besar ">28.57%</div></div>
-<div class="kartu"><h2>Rata-rata R</h2><div class="besar buruk">-0.4333</div></div>
-<div class="kartu"><h2>Total PnL (USD)</h2><div class="besar buruk">-26.76</div></div>
+:root{--bg:#0d111b;--panel:#161d2c;--panel2:#1d2639;--line:#2b3549;--txt:#e9eef8;--mut:#9aa7bd;
+--blue:#79a6ff;--red:#ff7285;--green:#57d69a;--yellow:#ffc857}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(900px 500px at 85% -10%,#1d2b4a 0,transparent 60%),var(--bg);
+color:var(--txt);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
+.wrap{max-width:1180px;margin:auto;padding:28px 22px 60px}
+header{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between;margin-bottom:22px}
+h1{font-size:clamp(1.8rem,4vw,2.6rem);margin:0;letter-spacing:-.03em}
+.sub{color:var(--mut);font-size:.92rem;margin-top:6px}
+.badge{display:inline-flex;align-items:center;gap:7px;background:#12301f;color:var(--green);
+border:1px solid #1e5b3b;padding:6px 12px;border-radius:999px;font-size:.78rem;font-weight:700}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}
+.tab{background:var(--panel);color:var(--mut);border:1px solid var(--line);padding:10px 16px;border-radius:12px;
+cursor:pointer;font-weight:700;font-size:.9rem;transition:.2s}
+.tab:hover{color:var(--txt);border-color:var(--blue)}
+.tab.on{background:var(--blue);color:#0d111b;border-color:var(--blue)}
+.panel{display:none;animation:fade .25s ease}.panel.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.grid{display:grid;gap:16px}.g4{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+.g2{grid-template-columns:repeat(auto-fit,minmax(330px,1fr))}
+.card{background:linear-gradient(160deg,var(--panel2),var(--panel));border:1px solid var(--line);
+border-radius:18px;padding:18px 20px;box-shadow:0 12px 30px rgba(0,0,0,.22)}
+.card h2{margin:0 0 14px;font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:var(--mut)}
+.kpi{font-size:2.1rem;font-weight:800;letter-spacing:-.04em}
+.kpi small{font-size:.85rem;color:var(--mut);font-weight:500;display:block;letter-spacing:0}
+.up{color:var(--green)}.down{color:var(--red)}
+table{border-collapse:collapse;width:100%;font-size:.86rem}
+th{text-align:left;color:var(--mut);font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;padding:8px 6px}
+td{padding:9px 6px;border-top:1px solid var(--line)}
+tr:hover td{background:#ffffff08}
+select,input[type=number]{background:#0f1521;color:var(--txt);border:1px solid var(--line);
+border-radius:9px;padding:8px 10px;font-size:.9rem}
+input[type=range]{width:100%;accent-color:var(--blue)}
+svg{width:100%;height:auto;display:block;overflow:visible}
+.axis{fill:var(--mut);font-size:10px}
+.bar{fill:url(#gr);transition:.3s}.bar:hover{fill:var(--yellow)}
+.kep{font-size:1.25rem;font-weight:800;margin:10px 0}
+.note{color:var(--mut);font-size:.85rem;line-height:1.6}
+pre{white-space:pre-wrap;font:500 .82rem/1.55 ui-monospace,monospace;color:#cdd7ea;max-height:420px;overflow:auto}
+details{margin-top:12px;background:#0f1521;border:1px solid var(--line);border-radius:12px;padding:12px}
+summary{cursor:pointer;font-weight:700;color:var(--blue)}
+.foot{color:var(--mut);font-size:.8rem;margin-top:24px;border-top:1px solid var(--line);padding-top:14px}
+a{color:var(--blue)}
+</style></head><body><div class="wrap">
+<header><div><h1>TrendSentry · Decision Desk</h1>
+<div class="sub">Keputusan Fase 4 · data hingga 2026-11-25 · 7 transaksi tertutup</div></div>
+<div class="badge"><span class="dot"></span>DASHBOARD LIVE</div></header>
+<div class="tabs" role="tablist">
+<button class="tab on" data-tab="d">Apa yang terjadi</button>
+<button class="tab" data-tab="g">Mengapa</button>
+<button class="tab" data-tab="p">Ke depan</button>
+<button class="tab" data-tab="r">Saran tindakan</button>
 </div>
-<div class="grid">
-<div class="kartu"><h2>1 · Deskriptif — apa yang terjadi</h2><table><tr><th>Pair</th><th>N</th><th>PnL USD</th><th>R</th></tr>
-<tr><td>AVAX/USDT</td><td>1</td><td>13.31</td><td>1.529</td></tr>
-<tr><td>SOL/USDT</td><td>2</td><td>-7.52</td><td>-0.372</td></tr>
-<tr><td>BNB/USDT</td><td>1</td><td>-8.14</td><td>-1.077</td></tr>
-<tr><td>HYPE/USDT</td><td>3</td><td>-24.41</td><td>-0.914</td></tr>
-</table><p>Ekuitas terakhir <b>976.76 USD</b>; puncak 1166.31 USD.</p></div>
-<div class="kartu"><h2>2 · Diagnostik — mengapa</h2><table><tr><th>Kelompok</th><th>N</th><th>Avg R</th><th>PnL</th></tr>
-<tr><td>stop</td><td>3</td><td>-1.097</td><td>-30.15</td></tr>
-<tr><td>donchian_exit</td><td>4</td><td>0.065</td><td>3.39</td></tr>
-<tr><td>sebelum</td><td>6</td><td>-0.317</td><td>-15.56</td></tr>
-<tr><td>sesudah</td><td>1</td><td>-1.134</td><td>-11.2</td></tr>
-</table><p>25 kuotasi tanpa sinyal (dibiarkan). Spread maks <b class='buruk'>0.1159%</b> &gt; batas 0,10%.</p></div>
-<div class="kartu"><h2>3 · Prediktif — kapan</h2>
-<p>Laju 0.533 trade/minggu. Untuk mencapai <b>10 trade</b> dibutuhkan ± <b>5.6 minggu</b> lagi (± Jan 2027).</p>
-<p>7 sinyal ENTER sudah sama dengan 7 posisi — tidak ada sinyal yang terlewat.</p>
-<p>MAE uji: baseline <b>0.6667 R</b> vs model 1.1725 R → baseline yang dipakai (model kalah).</p></div>
-<div class="kartu"><h2>4 · Preskriptif — sebaiknya apa</h2>
-<p>Ubah ambang untuk mencoba skenario:</p>
-<label>Target trade <input id="target" type="number" min="1" value="10"></label>
-<label>Batas spread % <input id="batas" type="number" step="0.01" value="0.10"></label>
-<p id="keputusan"></p>
-<details open><summary><b>Saran AI (OpenCode / Hy4 flash Free)</b></summary>
-<pre style="white-space:pre-wrap;font-size:.82rem"># Saran Preskriptif — Dihasilkan AI
+<section class="panel on" id="d"><div class="grid g4" id="kpi"></div>
+<div class="grid g2" style="margin-top:16px">
+<div class="card"><h2>Kurva ekuitas · 94 hari</h2><svg id="ekuitas" viewBox="0 0 620 200"></svg>
+<div class="note">Puncak 1166.31 USD · terakhir 976.76 USD</div></div>
+<div class="card"><h2>Transaksi tertutup · filter pair</h2>
+<select id="filter"><option value="SEMUA">Semua pair</option></select>
+<table id="tabel"><thead><tr><th>Pair</th><th>Masuk</th><th>Keluar</th><th>Alasan</th><th>PnL</th><th>R</th></tr></thead><tbody></tbody></table></div>
+</div></section>
+<section class="panel" id="g"><div class="grid g2">
+<div class="card"><h2>Spread maksimum per pair (%)</h2><svg id="spread" viewBox="0 0 620 240"></svg>
+<div class="note">Batas evaluasi 0,10% · ADA/USDT melewati batas.</div></div>
+<div class="card"><h2>Kenapa trade kalah?</h2>
+<div id="diagnostik"></div>
+<div class="note">25 dari 875 kuotasi tidak punya sinyal cocok — dibiarkan, bukan dibuang.
+Penjelasan alternatif: volatilitas pada hari entry, bukan kelemahan strategi secara umum.</div></div>
+</div></section>
+<section class="panel" id="p"><div class="grid g2">
+<div class="card"><h2>Evaluasi model vs baseline</h2>
+<div class="kep">MAE baseline 0.6667 R <span class="up">vs</span> model 1.1725 R</div>
+<div class="note">Data latih 5 trade pertama, data uji 2 trade terakhir. Model kalah → baseline yang dipakai.
+Ini jujur, bukan akurasi yang dibesar-besarkan.</div></div>
+<div class="card"><h2>Sinyal per bulan</h2><svg id="sinyal" viewBox="0 0 620 220"></svg>
+<div class="note">ENTER sejalan dengan posisi yang dibuka; IGNORE mendominasi.</div></div>
+</div></section>
+<section class="panel" id="r"><div class="grid g2">
+<div class="card"><h2>Simulasi ambang · langsung berubah</h2>
+<label class="note">Target closed trade</label><input id="target" type="range" min="1" max="20" value="10">
+<span class="note" id="targetLabel">10</span>
+<label class="note">Batas spread (%)</label><input id="batas" type="range" min="1" max="30" value="10">
+<span class="note" id="batasLabel">0,10</span>
+<div class="kep" id="keputusan"></div>
+<div class="note" id="rincian"></div></div>
+<div class="card"><h2>Rekomendasi AI (OpenCode / Hy4 flash Free)</h2>
+<details open><summary>Lihat memo AI</summary><pre># Saran Preskriptif — Dihasilkan AI
 
 **Model:** OpenCode / Hy4 flash Free · **Prompt:** `preskriptif/prompt.txt` · **Dicek:** angka dibandingkan dengan `sql/hasil/*.csv` oleh Bagus, 27 Nov 2026.
 
@@ -71,19 +112,96 @@ Bila kelima syarat terpenuhi — 10 trade, ≥ 8 minggu, R &gt; 0, return melebi
 ## Batasan
 
 Sampel hanya 7 trade, jadi angka R dan win rate 28,57% belum cukup untuk kesimpulan statistik. Backtest 152,0% tidak menjamin hasil ke depan dan kalah dari strategi beli-dan-simpan. Tidak ada data pengguna atau pendapatan yang dipakai; `BUSINESS_VALIDATION_PLAN.md` menyatakan data demand belum cukup. **Bagian yang tidak didukung angka di atas: tidak ada.** Semua pernyataan di memo ini bersumber dari angka yang dicantumkan dalam prompt.
-</pre></details></div>
-</div>
-<footer>Sumber: <code>Nomssky/TrendSentry</code> commit 88d28ee (25 Nov 2026). Query: <code>sql/</code>. Prediktif memakai asumsi laju konstan, bukan model statistik.</footer>
+</pre></details>
+<details><summary>Aturan angka yang bisa dicek</summary><pre># Saran Preskriptif — Angka (bukan AI)
+
+**Keputusan: A — tetap paper trading.**
+
+- BELUM — Closed trade ≥ 10: 7/10
+- LULUS — Durasi ≥ 8 minggu: 13,14 minggu
+- BELUM — Avg R &gt; 0: -0.4333
+- BELUM — Return &gt; buy-and-hold: 152,0% vs 155,03%
+- BELUM — Spread maks &lt; 0,10%: 0.1159%
+
+## Tindakan
+
+- Kumpulkan **3 closed trade lagi** (± 5.6 minggu pada laju 0.533/minggu).
+- Pertahankan batas risiko **≤ 1% per trade**, stop loss wajib, maksimal **5 posisi** dan **2 per cluster**.
+- Tandai 25 kuotasi tanpa sinyal sebagai data pendukung, bukan pemicu entry.
+- Perbaiki pemeriksaan spread pada ADA/USDT sebelum menaikkan ukuran posisi.
+
+Kapan berubah pikiran: bila kelima syarat di atas terpenuhi, evaluasi ulang Fase 4.
+Batasan: ini aturan deterministik; saran berbasis AI ada di `saran-ai.md`.</pre></details></div>
+</div></section>
+<div class="foot">Sumber: <code>Nomssky/TrendSentry</code> commit 88d28ee · angka dari <code>sql/hasil/</code> dan <code>model/hasil-evaluasi.md</code>.
+Dibangun dengan <code>python3 dasbor/buat_dasbor.py</code>. Tidak ada kunci API atau data pribadi.</div>
+<script>const D={"trades": [{"pair": "SOL/USDT", "entry_date": "2026-08-27", "exit_date": "2026-09-10", "exit_reason": "stop_loss", "pnl": -10.81, "r": -1.081}, {"pair": "HYPE/USDT", "entry_date": "2026-09-03", "exit_date": "2026-09-10", "exit_reason": "donchian_exit", "pnl": -7.74, "r": -0.922}, {"pair": "BNB/USDT", "entry_date": "2026-09-05", "exit_date": "2026-09-10", "exit_reason": "live_stop", "pnl": -8.14, "r": -1.077}, {"pair": "SOL/USDT", "entry_date": "2026-09-18", "exit_date": "2026-10-07", "exit_reason": "donchian_exit", "pnl": 3.29, "r": 0.337}, {"pair": "AVAX/USDT", "entry_date": "2026-09-18", "exit_date": "2026-10-08", "exit_reason": "donchian_exit", "pnl": 13.31, "r": 1.529}, {"pair": "HYPE/USDT", "entry_date": "2026-09-18", "exit_date": "2026-09-29", "exit_reason": "donchian_exit", "pnl": -5.47, "r": -0.685}, {"pair": "HYPE/USDT", "entry_date": "2026-10-29", "exit_date": "2026-11-06", "exit_reason": "live_stop", "pnl": -11.2, "r": -1.134}], "equity": [{"date": "2026-08-24", "equity": 1000.0}, {"date": "2026-08-25", "equity": 1000.14}, {"date": "2026-08-26", "equity": 1000.14}, {"date": "2026-08-27", "equity": 1166.31}, {"date": "2026-08-28", "equity": 997.95}, {"date": "2026-08-29", "equity": 1000.32}, {"date": "2026-08-30", "equity": 994.56}, {"date": "2026-08-31", "equity": 996.63}, {"date": "2026-09-01", "equity": 992.1}, {"date": "2026-09-02", "equity": 992.91}, {"date": "2026-09-03", "equity": 1083.65}, {"date": "2026-09-04", "equity": 993.34}, {"date": "2026-09-05", "equity": 1131.77}, {"date": "2026-09-06", "equity": 1002.23}, {"date": "2026-09-07", "equity": 993.1}, {"date": "2026-09-08", "equity": 993.19}, {"date": "2026-09-09", "equity": 994.8}, {"date": "2026-09-10", "equity": 984.3}, {"date": "2026-09-11", "equity": 974.77}, {"date": "2026-09-12", "equity": 974.9}, {"date": "2026-09-13", "equity": 975.04}, {"date": "2026-09-14", "equity": 975.17}, {"date": "2026-09-15", "equity": 975.3}, {"date": "2026-09-16", "equity": 975.44}, {"date": "2026-09-17", "equity": 975.57}, {"date": "2026-09-18", "equity": 975.7}, {"date": "2026-09-19", "equity": 973.44}, {"date": "2026-09-20", "equity": 987.56}, {"date": "2026-09-21", "equity": 999.31}, {"date": "2026-09-22", "equity": 1006.31}, {"date": "2026-09-23", "equity": 1009.44}, {"date": "2026-09-24", "equity": 994.71}, {"date": "2026-09-25", "equity": 994.52}, {"date": "2026-09-26", "equity": 1003.44}, {"date": "2026-09-27", "equity": 1004.63}, {"date": "2026-09-28", "equity": 1004.93}, {"date": "2026-09-29", "equity": 996.18}, {"date": "2026-09-30", "equity": 1002.29}, {"date": "2026-10-01", "equity": 997.2}, {"date": "2026-10-02", "equity": 998.0}, {"date": "2026-10-03", "equity": 996.66}, {"date": "2026-10-04", "equity": 1000.3}, {"date": "2026-10-05", "equity": 1001.99}, {"date": "2026-10-06", "equity": 1001.44}, {"date": "2026-10-07", "equity": 1005.47}, {"date": "2026-10-08", "equity": 997.12}, {"date": "2026-10-09", "equity": 988.03}, {"date": "2026-10-10", "equity": 988.03}, {"date": "2026-10-11", "equity": 988.03}, {"date": "2026-10-12", "equity": 988.03}, {"date": "2026-10-13", "equity": 988.03}, {"date": "2026-10-14", "equity": 988.03}, {"date": "2026-10-15", "equity": 988.03}, {"date": "2026-10-16", "equity": 988.03}, {"date": "2026-10-17", "equity": 988.03}, {"date": "2026-10-18", "equity": 988.03}, {"date": "2026-10-19", "equity": 988.03}, {"date": "2026-10-20", "equity": 988.03}, {"date": "2026-10-21", "equity": 988.03}, {"date": "2026-10-22", "equity": 988.03}, {"date": "2026-10-23", "equity": 988.03}, {"date": "2026-10-24", "equity": 988.03}, {"date": "2026-10-25", "equity": 988.03}, {"date": "2026-10-26", "equity": 988.03}, {"date": "2026-10-27", "equity": 988.03}, {"date": "2026-10-28", "equity": 988.03}, {"date": "2026-10-29", "equity": 988.03}, {"date": "2026-10-30", "equity": 984.78}, {"date": "2026-10-31", "equity": 985.4}, {"date": "2026-11-01", "equity": 984.04}, {"date": "2026-11-02", "equity": 983.95}, {"date": "2026-11-03", "equity": 981.41}, {"date": "2026-11-04", "equity": 1056.68}, {"date": "2026-11-05", "equity": 981.22}, {"date": "2026-11-06", "equity": 976.76}, {"date": "2026-11-07", "equity": 976.76}, {"date": "2026-11-08", "equity": 976.76}, {"date": "2026-11-09", "equity": 976.76}, {"date": "2026-11-10", "equity": 976.76}, {"date": "2026-11-11", "equity": 976.76}, {"date": "2026-11-12", "equity": 976.76}, {"date": "2026-11-13", "equity": 976.76}, {"date": "2026-11-14", "equity": 976.76}, {"date": "2026-11-15", "equity": 976.76}, {"date": "2026-11-16", "equity": 976.76}, {"date": "2026-11-17", "equity": 976.76}, {"date": "2026-11-18", "equity": 976.76}, {"date": "2026-11-19", "equity": 976.76}, {"date": "2026-11-20", "equity": 976.76}, {"date": "2026-11-21", "equity": 976.76}, {"date": "2026-11-22", "equity": 976.76}, {"date": "2026-11-23", "equity": 976.76}, {"date": "2026-11-24", "equity": 976.76}, {"date": "2026-11-25", "equity": 976.76}], "pair": [{"pair": "ADA/USDT", "n": 84, "rata": 0.0531, "maks": 0.1159}, {"pair": "AVAX/USDT", "n": 84, "rata": 0.0195, "maks": 0.0562}, {"pair": "DOGE/USDT", "n": 84, "rata": 0.0138, "maks": 0.0518}, {"pair": "LINK/USDT", "n": 84, "rata": 0.0179, "maks": 0.0498}, {"pair": "HYPE/USDT", "n": 84, "rata": 0.0093, "maks": 0.0352}, {"pair": "BNB/USDT", "n": 91, "rata": 0.0061, "maks": 0.0321}, {"pair": "XRP/USDT", "n": 91, "rata": 0.0082, "maks": 0.0224}, {"pair": "SOL/USDT", "n": 91, "rata": 0.0102, "maks": 0.0148}, {"pair": "ETH/USDT", "n": 91, "rata": 0.0004, "maks": 0.0006}, {"pair": "BTC/USDT", "n": 91, "rata": 0.0, "maks": 0.0}], "bulan": [{"bulan": "2026-08", "decision": "ENTER", "n": 1}, {"bulan": "2026-08", "decision": "IGNORE", "n": 34}, {"bulan": "2026-09", "decision": "ENTER", "n": 5}, {"bulan": "2026-09", "decision": "EXIT", "n": 3}, {"bulan": "2026-09", "decision": "IGNORE", "n": 292}, {"bulan": "2026-10", "decision": "ENTER", "n": 1}, {"bulan": "2026-10", "decision": "EXIT", "n": 2}, {"bulan": "2026-10", "decision": "IGNORE", "n": 307}, {"bulan": "2026-11", "decision": "IGNORE", "n": 230}], "yatim": 25, "enter": 7, "mae": {"baseline": "0.6667", "model": "1.1725"}, "tanggal": "2026-11-25"};</script>
 <script>
-const d=document.querySelector('.wrap').dataset;
-const target=document.getElementById('target'), batas=document.getElementById('batas'), out=document.getElementById('keputusan');
-function hitung(){
-  const t=Number(target.value)||10, b=Number(batas.value)||0.1;
-  const cukup=Number(d.trades)>=t && Number(d.spread)<b;
-  const minggu=(t-Number(d.trades))/Number(d.rate);
-  out.innerHTML = cukup
-    ? `<b class="baik">B — mulai live trading</b>: target dan batas spread terpenuhi.`
-    : `<b class="buruk">A — tetap paper trading</b>: ${Math.max(0,t-Number(d.trades))} trade lagi (± ${Math.max(0,minggu).toFixed(1)} minggu) atau spread ${d.spread}% masih di atas ${b}%.`;
+const $=(s)=>document.querySelector(s);
+const fmt=(x)=>Number(x).toLocaleString('id-ID',{minimumFractionDigits:2,maximumFractionDigits:2});
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('.panel').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on'); document.getElementById(b.dataset.tab).classList.add('on');
+}));
+function kpi(list){
+  const n=list.length, w=list.filter(t=>t.pnl>0).length;
+  const r=n?list.reduce((a,b)=>a+b.r,0)/n:0, p=n?list.reduce((a,b)=>a+b.pnl,0):0;
+  return [[n,'closed trade',''],[n?fmt(100*w/n)+'%':'0%','win rate',''],
+          [(r>0?'+':'')+r.toFixed(4),'rata-rata R',r>0?'up':'down'],
+          [(p>0?'+':'')+fmt(p),'total PnL USD',p>0?'up':'down']];
 }
-target.addEventListener('input',hitung); batas.addEventListener('input',hitung); hitung();
+function render(){
+  const v=$('#filter').value, list=v==='SEMUA'?D.trades:D.trades.filter(t=>t.pair===v);
+  $('#kpi').innerHTML=kpi(list).map(k=>`<div class="card"><div class="kpi ${k[2]}">${k[0]}<small>${k[1]}</small></div></div>`).join('');
+  $('#tabel tbody').innerHTML=list.map(t=>`<tr><td>${t.pair}</td><td>${t.entry_date}</td><td>${t.exit_date}</td>
+    <td>${t.exit_reason}</td><td class="${t.pnl>0?'up':'down'}">${fmt(t.pnl)}</td><td class="${t.r>0?'up':'down'}">${t.r}</td></tr>`).join('');
+}
+const pairs=[...new Set(D.trades.map(t=>t.pair))];
+$('#filter').innerHTML='<option value="SEMUA">Semua pair</option>'+pairs.map(p=>`<option>${p}</option>`).join('');
+$('#filter').addEventListener('change',render); render();
+
+function lineChart(el,data,color){
+  const w=620,h=200,pad=26,vs=data.map(d=>d.equity),lo=Math.min(...vs),hi=Math.max(...vs);
+  const x=i=>pad+i*(w-2*pad)/(data.length-1), y=v=>h-pad-(v-lo)/(hi-lo||1)*(h-2*pad);
+  const pts=data.map((d,i)=>`${x(i).toFixed(1)},${y(d.equity).toFixed(1)}`).join(' ');
+  const area=`M ${x(0)},${h-pad} L ${pts.replaceAll(' ',' L ')} L ${x(data.length-1)},${h-pad} Z`;
+  el.innerHTML=`<defs><linearGradient id="gr2" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="${color}" stop-opacity=".35"/><stop offset="1" stop-color="${color}" stop-opacity="0"/>
+    </linearGradient></defs><path d="${area}" fill="url(#gr2)"/>
+    <polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2.2"/>
+    <circle cx="${x(data.length-1)}" cy="${y(data[data.length-1].equity)}" r="4" fill="${color}"/>
+    <text class="axis" x="${pad}" y="${h-6}">${data[0].date}</text>
+    <text class="axis" x="${w-pad}" y="${h-6}" text-anchor="end">${data[data.length-1].date}</text>
+    <text class="axis" x="${pad}" y="14">${fmt(hi)} USD</text>`;
+}
+lineChart($('#ekuitas'),D.equity,'#79a6ff');
+
+$('#spread').innerHTML=`<defs><linearGradient id="gr" x1="0" y1="0" x2="1" y2="0">
+ <stop offset="0" stop-color="#79a6ff"/><stop offset="1" stop-color="#ff7285"/></linearGradient></defs>`+
+ D.pair.map((p,i)=>{const w=Math.max(3,p.maks*3000);return `<text class="axis" x="0" y="${18+i*23}">${p.pair}</text>
+ <rect class="bar" x="90" y="${6+i*23}" width="${w.toFixed(1)}" height="13" rx="4"><title>${p.pair}: ${p.maks}% (rata ${p.rata}%)</title></rect>
+ <text class="axis" x="${100+w}" y="${18+i*23}">${p.maks}%</text>`;}).join('');
+
+const dc={}; D.bulan.forEach(b=>dc[b.decision]=(dc[b.decision]||0)+b.n);
+$('#sinyal').innerHTML=Object.entries(dc).map((e,i)=>{const h=Math.min(e[1],300)/300*150;
+ return `<rect class="bar" x="${40+i*170}" y="${180-h}" width="90" height="${h}" rx="6"><title>${e[0]}: ${e[1]}</title></rect>
+ <text class="axis" x="${85+i*170}" y="198">${e[0]}</text><text class="axis" x="${85+i*170}" y="${172-h}">${e[1]}</text>`;}).join('');
+
+$('#diagnostik').innerHTML=`<table><thead><tr><th>Kelompok</th><th>N</th><th>Avg R</th><th>PnL</th></tr></thead><tbody>
+<tr><td>stop (loss/stop)</td><td>3</td><td class="down">-1,097</td><td class="down">-30,15</td></tr>
+<tr><td>donchian_exit</td><td>4</td><td class="up">+0,065</td><td class="up">+3,39</td></tr>
+<tr><td>sebelum 20 Okt</td><td>6</td><td class="down">-0,317</td><td class="down">-15,56</td></tr>
+<tr><td>sesudah 20 Okt</td><td>1</td><td class="down">-1,134</td><td class="down">-11,20</td></tr></tbody></table>`;
+
+const tr=$('#target'), bs=$('#batas');
+function simulasi(){
+ const t=+tr.value, b=+bs.value/100, n=D.trades.length, rate=n/13.14;
+ $('#targetLabel').textContent=t; $('#batasLabel').textContent=b.toFixed(2);
+ const kurang=Math.max(0,t-n), minggu=kurang/rate, ok=n>=t && 0.1159<b;
+ $('#keputusan').innerHTML=ok?'<span class="up">B — mulai live trading</span>':'<span class="down">A — tetap paper trading</span>';
+ $('#rincian').textContent=ok?'Syarat simulasi terpenuhi. Cek dulu kondisi sebenarnya di panel "Mengapa".'
+  :`Kurang ${kurang} trade (± ${minggu.toFixed(1)} minggu) atau spread 0,1159% masih di atas ${b.toFixed(2)}%.`;
+}
+tr.addEventListener('input',simulasi); bs.addEventListener('input',simulasi); simulasi();
 </script></div></body></html>
