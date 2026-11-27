@@ -1,0 +1,89 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dasbor TrendSentry — TK2/TK3</title>
+<style>
+body{font-family:system-ui,sans-serif;background:#F3EEE4;color:#171614;margin:0;padding:24px}
+.wrap{max-width:1100px;margin:auto}
+h1{font-size:2rem;margin:0 0 4px} h2{font-size:1.1rem;letter-spacing:.1em;text-transform:uppercase;margin:0 0 12px}
+.sub{color:#5E5950;margin-bottom:24px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-bottom:24px}
+.kartu{border:3px solid #171614;background:#fff;box-shadow:6px 6px 0 #171614;padding:14px 16px}
+.besar{font-size:2rem;font-weight:800;color:#1D4C98}
+.buruk{color:#C8361F} .baik{color:#1F7A4A}
+table{border-collapse:collapse;width:100%;font-size:.9rem;background:#fff}
+th{background:#171614;color:#fff;text-align:left;padding:7px 10px}
+td{padding:7px 10px;border-bottom:1px solid #ddd}
+input{width:90px;padding:5px;border:2px solid #171614;font-size:1rem}
+footer{font-size:.85rem;color:#5E5950;margin-top:24px}
+</style></head><body>
+<div class="wrap" data-trades="7" data-rate="0.5327" data-spread="0.1159" data-yatim="25">
+<h1>TrendSentry — Dasbor Keputusan Fase 4</h1>
+<p class="sub">Data 2026-11-25 · 94 hari ekuitas · 7 transaksi tertutup. Dibangun dari <code>trendsentry.db</code>.</p>
+<div class="grid">
+<div class="kartu"><h2>Closed trade</h2><div class="besar ">7</div></div>
+<div class="kartu"><h2>Win rate</h2><div class="besar ">28.57%</div></div>
+<div class="kartu"><h2>Rata-rata R</h2><div class="besar buruk">-0.4333</div></div>
+<div class="kartu"><h2>Total PnL (USD)</h2><div class="besar buruk">-26.76</div></div>
+</div>
+<div class="grid">
+<div class="kartu"><h2>1 · Deskriptif — apa yang terjadi</h2><table><tr><th>Pair</th><th>N</th><th>PnL USD</th><th>R</th></tr>
+<tr><td>AVAX/USDT</td><td>1</td><td>13.31</td><td>1.529</td></tr>
+<tr><td>SOL/USDT</td><td>2</td><td>-7.52</td><td>-0.372</td></tr>
+<tr><td>BNB/USDT</td><td>1</td><td>-8.14</td><td>-1.077</td></tr>
+<tr><td>HYPE/USDT</td><td>3</td><td>-24.41</td><td>-0.914</td></tr>
+</table><p>Ekuitas terakhir <b>976.76 USD</b>; puncak 1166.31 USD.</p></div>
+<div class="kartu"><h2>2 · Diagnostik — mengapa</h2><table><tr><th>Kelompok</th><th>N</th><th>Avg R</th><th>PnL</th></tr>
+<tr><td>stop</td><td>3</td><td>-1.097</td><td>-30.15</td></tr>
+<tr><td>donchian_exit</td><td>4</td><td>0.065</td><td>3.39</td></tr>
+<tr><td>sebelum</td><td>6</td><td>-0.317</td><td>-15.56</td></tr>
+<tr><td>sesudah</td><td>1</td><td>-1.134</td><td>-11.2</td></tr>
+</table><p>25 kuotasi tanpa sinyal (dibiarkan). Spread maks <b class='buruk'>0.1159%</b> &gt; batas 0,10%.</p></div>
+<div class="kartu"><h2>3 · Prediktif — kapan</h2>
+<p>Laju 0.533 trade/minggu. Untuk mencapai <b>10 trade</b> dibutuhkan ± <b>5.6 minggu</b> lagi (± Jan 2027).</p>
+<p>7 sinyal ENTER sudah sama dengan 7 posisi — tidak ada sinyal yang terlewat.</p>
+<p>MAE uji: baseline <b>0.6667 R</b> vs model 1.1725 R → baseline yang dipakai (model kalah).</p></div>
+<div class="kartu"><h2>4 · Preskriptif — sebaiknya apa</h2>
+<p>Ubah ambang untuk mencoba skenario:</p>
+<label>Target trade <input id="target" type="number" min="1" value="10"></label>
+<label>Batas spread % <input id="batas" type="number" step="0.01" value="0.10"></label>
+<p id="keputusan"></p>
+<details open><summary><b>Saran AI (OpenCode / Hy4 flash Free)</b></summary>
+<pre style="white-space:pre-wrap;font-size:.82rem"># Saran Preskriptif — Dihasilkan AI
+
+**Model:** OpenCode / Hy4 flash Free · **Prompt:** `preskriptif/prompt.txt` · **Dicek:** angka dibandingkan dengan `sql/hasil/*.csv` oleh Bagus, 27 Nov 2026.
+
+## Keputusan
+
+**A — tetap paper trading. Jangan mulai Fase 4 dengan uang sungguhan.**
+
+Empat dari lima syarat gate belum terpenuhi: baru 7 dari 10 closed trade, rata-rata −0,4333R (harus &gt; 0), return backtest 152,0% kalah dari buy-and-hold 155,03%, dan spread maksimum 0,1159% di atas batas 0,10%. Hanya durasi 13,14 minggu yang sudah lulus.
+
+## Tiga tindakan
+
+1. **Kumpulkan 3 closed trade lagi.** Pada laju 0,533 trade per minggu, itu ± 5,6 minggu lagi. Evaluate ulang setelah trade ke-10 tercatat, bukan sebelum.
+2. **Perketat pemeriksaan spread ADA/USDT.** Spread maksimum 0,1159% berasal dari pair ini. Jangan menaikkan ukuran posisi sampai spread kembali di bawah 0,10% dalam dua minggu berturut-turut.
+3. **Tinjau 3 exit lewat stop.** Ketiganya ber-rata-rata −1,097R dan menyumbang rugi 30,15 USD. Bandingkan ATR pada hari entry dengan jarak stop sebelum mengubah aturan; jangan mengubah parameter hanya untuk mempercepat gate.
+
+## Kapan berubah pikiran
+
+Bila kelima syarat terpenuhi — 10 trade, ≥ 8 minggu, R &gt; 0, return melebihi buy-and-hold, dan spread &lt; 0,10% — barulah evaluasi Fase 4. Bila setelah 8 minggu tambahan R dan return masih kalah, pilih **C**: pivot ke produk disiplin tanpa eksekusi order.
+
+## Batasan
+
+Sampel hanya 7 trade, jadi angka R dan win rate 28,57% belum cukup untuk kesimpulan statistik. Backtest 152,0% tidak menjamin hasil ke depan dan kalah dari strategi beli-dan-simpan. Tidak ada data pengguna atau pendapatan yang dipakai; `BUSINESS_VALIDATION_PLAN.md` menyatakan data demand belum cukup. **Bagian yang tidak didukung angka di atas: tidak ada.** Semua pernyataan di memo ini bersumber dari angka yang dicantumkan dalam prompt.
+</pre></details></div>
+</div>
+<footer>Sumber: <code>Nomssky/TrendSentry</code> commit 88d28ee (25 Nov 2026). Query: <code>sql/</code>. Prediktif memakai asumsi laju konstan, bukan model statistik.</footer>
+<script>
+const d=document.querySelector('.wrap').dataset;
+const target=document.getElementById('target'), batas=document.getElementById('batas'), out=document.getElementById('keputusan');
+function hitung(){
+  const t=Number(target.value)||10, b=Number(batas.value)||0.1;
+  const cukup=Number(d.trades)>=t && Number(d.spread)<b;
+  const minggu=(t-Number(d.trades))/Number(d.rate);
+  out.innerHTML = cukup
+    ? `<b class="baik">B — mulai live trading</b>: target dan batas spread terpenuhi.`
+    : `<b class="buruk">A — tetap paper trading</b>: ${Math.max(0,t-Number(d.trades))} trade lagi (± ${Math.max(0,minggu).toFixed(1)} minggu) atau spread ${d.spread}% masih di atas ${b}%.`;
+}
+target.addEventListener('input',hitung); batas.addEventListener('input',hitung); hitung();
+</script></div></body></html>
